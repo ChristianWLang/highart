@@ -59,7 +59,7 @@ def main():
                 )
 
         for i in generated:
-            logging.info('Epoch: {} Text: {}'.format(epoch, generated_text))
+            logging.info('Epoch: {} Text: {}'.format(epoch, i))
 
     return
 if __name__ == '__main__':
