@@ -7,13 +7,13 @@ def get_model(dims):
 
     seq_input = tf.keras.layers.Input(shape = dims)
 
-    x = tf.keras.layers.LSTM(64,
+    x = tf.keras.layers.CuDNNLSTM(512,
             return_sequences = True,
             use_bias = True)(seq_input)
 
     x = tf.keras.layers.Dropout(.5)(x)
     
-    x = tf.keras.layers.LSTM(64,
+    x = tf.keras.layers.CuDNNLSTM(512,
             return_sequences = False,
             use_bias = True)(x)
 
