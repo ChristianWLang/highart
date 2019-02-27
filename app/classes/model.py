@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
 
 import tensorflow as tf
+import keras
 
 
 def get_model(dims):
 
-    seq_input = tf.keras.layers.Input(shape = dims)
+    seq_input = keras.layers.Input(shape = dims)
 
-    x = tf.keras.layers.CuDNNLSTM(512,
-            return_sequences = True,
-            use_bias = True)(seq_input)
+    x = keras.layers.CuDNNLSTM(512,
+            return_sequences = True)(seq_input)
 
-    x = tf.keras.layers.Dropout(.5)(x)
+    x = keras.layers.Dropout(.5)(x)
     
-    x = tf.keras.layers.CuDNNLSTM(512,
-            return_sequences = False,
-            use_bias = True)(x)
+    x = keras.layers.CuDNNLSTM(512,
+            return_sequences = False)(x)
 
-    x = tf.keras.layers.Dropout(.5)(x)
+    x = keras.layers.Dropout(.5)(x)
 
-    x = tf.keras.layers.Dense(128,
+    x = keras.layers.Dense(128,
             activation = 'relu')(x)
 
-    seq_output = tf.keras.layers.Dense(dims[1],
+    seq_output = keras.layers.Dense(dims[1],
             activation = 'softmax')(x)
 
-    model = tf.keras.models.Model(
+    model = keras.models.Model(
             inputs = seq_input,
             outputs = seq_output)
 
@@ -35,4 +34,12 @@ def get_model(dims):
             metrics = ['acc']
             )
 
-    return model
+    es = keras.callbacks.EarlyStopping(monitor = 'loss',
+            min_delta = 0,
+            patience = 10,
+            verbose = 0,
+            mode = 'auto',
+            restore_best_weights = True
+            )
+
+    return model, es

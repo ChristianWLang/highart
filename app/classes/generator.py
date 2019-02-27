@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import tensorflow as tf
+import keras
 import numpy as np
 
 
-class Generator(tf.keras.utils.Sequence):
+class Generator(keras.utils.Sequence):
     def __init__(self, X, charmap, dims, batch_size = 32, shuffle=True):
         self.X = X
         self.charmap = charmap

@@ -42,24 +42,25 @@ def main():
             batch_size = batch_size,
             shuffle = True)
 
-    model = get_model((timesteps, len(charmap)))
+    model, es = get_model((timesteps, len(charmap)))
 
-    for epoch in range(epochs):
-        model.fit_generator(
-                generator = generator,
-                use_multiprocessing = True
-                )
+    model.fit_generator(
+            generator = generator,
+            epochs = epochs,
+            callbacks = [es],
+            use_multiprocessing = True
+            )
 
-        generated_text = ''
-        generated = generate_text(
-                start = generated_text,
-                generator = generator,
-                model = model,
-                charmap = charmap
-                )
+    generated_text = ''
+    generated = generate_text(
+            start = generated_text,
+            generator = generator,
+            model = model,
+            charmap = charmap
+            )
 
-        for i in generated:
-            logging.info('Epoch: {} Text: {}'.format(epoch, i))
+    for i in generated:
+        logging.info('Epoch: {} Text: {}'.format(epoch, i))
 
     return
 if __name__ == '__main__':
