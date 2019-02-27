@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
-import urllib.request as ur
 import configparser
 
 import os
+import shutil
 import logging
 
 from .classes.generator import Generator
 from .classes.model import get_model
 from .funcs.generate_text import generate_text
+from .funcs.get_text import get_text
 
 
 def main():
 
-    os.mkdir('tmp')
+    if not os.path.exists('tmp/'):
+        os.mkdir('tmp')
 
     logging.basicConfig(
             filename = 'tmp/training.log',
@@ -29,8 +31,7 @@ def main():
     batch_size = int(config['TRAINING']['BATCH_SIZE'])
     epochs = int(config['TRAINING']['EPOCHS'])
 
-    url = 'http://www.gutenberg.org/cache/epub/16328/pg16328.txt'
-    txt = str(ur.urlopen(url).read())
+    txt = get_text()
 
     chars = sorted(set(txt))
     charmap = {v:i for i,v in enumerate(chars)}
@@ -56,11 +57,12 @@ def main():
             start = generated_text,
             generator = generator,
             model = model,
-            charmap = charmap
+            charmap = charmap,
+            length = 1000
             )
 
     for i in generated:
-        logging.info('Epoch: {} Text: {}'.format(epoch, i))
+        logging.info('Text: {}'.format(epoch, i))
 
     return
 if __name__ == '__main__':

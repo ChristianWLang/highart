@@ -14,6 +14,11 @@ def get_model(dims):
     x = keras.layers.Dropout(.5)(x)
     
     x = keras.layers.CuDNNLSTM(512,
+            return_sequences = True)(seq_input)
+
+    x = keras.layers.Dropout(.5)(x)
+    
+    x = keras.layers.CuDNNLSTM(512,
             return_sequences = False)(x)
 
     x = keras.layers.Dropout(.5)(x)
@@ -36,8 +41,8 @@ def get_model(dims):
 
     es = keras.callbacks.EarlyStopping(monitor = 'loss',
             min_delta = 0,
-            patience = 10,
-            verbose = 0,
+            patience = 50,
+            verbose = 1,
             mode = 'auto',
             restore_best_weights = True
             )
